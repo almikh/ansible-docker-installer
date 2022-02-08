@@ -1,0 +1,27 @@
+---
+- name: Delete the repository if it was added (otherwise it does not work install yum-utils)
+  yum_repository: 
+    name: docker-ce
+    state: absent
+
+- name: Install utils
+  yum: 
+    state: present
+    name: yum-utils
+
+- name: Get Docker from repo
+  shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+- name: Install Docker
+  yum:
+    state: present
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+
+- name: Run Docker
+  systemd:
+    state: started
+    name: docker
+
